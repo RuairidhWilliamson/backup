@@ -1,3 +1,4 @@
+import datetime
 def read_text_file(name):
     f = open(name, "r")
     out = f.read()
@@ -16,3 +17,8 @@ def load_config(name, dictionary = False):
         return [convert_slashes(x) for x in lines]
 def convert_slashes(x):
     return "".join(["/" if i == "\\" else i for i in x])
+
+def log(message):
+    f = open("log.log", "a")
+    f.write("{} {}\n".format(datetime.datetime.now().strftime("[%y/%m/%d %H:%M:%S]"), message))
+    f.close()

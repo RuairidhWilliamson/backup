@@ -1,0 +1,4 @@
+**.cfg
+*.cfg
+*.log
+__pycache__/

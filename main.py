@@ -1,4 +1,5 @@
 import datetime, utils, os, shutil, time
+from math import floor
 
 config = utils.load_config("config.cfg", True)
 directories = utils.load_config("directories.cfg", True)
@@ -6,8 +7,9 @@ directories = utils.load_config("directories.cfg", True)
 def backup_all():
     last_backup = int(utils.read_text_file("lastBackup.txt"))
     # Check if the minimum time has passed since the last backup
-    if int(time.time()) - last_backup < int(config["BackupFrequency"]) * 3600 * 24:
-        print("No backup required")
+    delta_time = int(config["BackupFrequency"]) * 3600 * 24 - int(time.time()) + last_backup
+    if delta_time > 0:
+        utils.log("No backup required for {}h {}m".format(floor(delta_time / 3600), round((delta_time / 60) % 60)))
         return
     # Create backup folder
     backup_name = datetime.datetime.now().strftime("%y-%m-%d %H-%M-%S")
@@ -23,8 +25,9 @@ def backup_all():
     dirs = sorted(dirs)
     if len(dirs) > int(config["BackupCount"]):
         # Delete oldest backup
+        utils.log("Deleting old backup: {}".format(dirs[0]))
         shutil.rmtree(config["BackupDirectory"] + "/" + dirs[0])
-    print("Backup completed")
+    utils.log("Backup completed: {}".format(backup_name))
 
 if __name__ == "__main__":
     backup_all()
