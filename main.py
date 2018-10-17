@@ -8,7 +8,7 @@ def backup_all():
     last_backup = int(utils.read_text_file("lastBackup.txt"))
     # Check if the minimum time has passed since the last backup
     delta_time = int(config["BackupFrequency"]) * 3600 * 24 - int(time.time()) + last_backup
-    if delta_time > 0:
+    if delta_time > 100:
         utils.log("No backup required for {}h {}m".format(floor(delta_time / 3600), round((delta_time / 60) % 60)))
         return
     # Create backup folder
